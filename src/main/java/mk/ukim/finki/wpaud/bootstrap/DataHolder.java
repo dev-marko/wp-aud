@@ -1,0 +1,31 @@
+package mk.ukim.finki.wpaud.bootstrap;
+
+import mk.ukim.finki.wpaud.model.Category;
+import mk.ukim.finki.wpaud.model.User;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.List;
+
+// Za ova da bide Singleton, odnosno da se napravi samo
+// edna instanca koga ke ja startuvame aplikacijata
+// mora da ja iskoristime anotacijata Component
+
+@Component
+public class DataHolder {
+    public static List<Category> categoryList = new ArrayList<>();
+    public static List<User> userList = new ArrayList<>();
+
+    // Shtom ke se instancira klasava, ke se povika metodov
+    // za da se popolnat nekoi parametri (kako da povikuva konstruktor)
+    @PostConstruct
+    public void init() {
+        categoryList.add(new Category("Software", "Software desc"));
+        categoryList.add(new Category("Books", "Books desc"));
+        categoryList.add(new Category("Hardware", "Hardware desc"));
+
+        userList.add(new User("marko123", "ms", "Marko", "Spasenovski"));
+        userList.add(new User("andrej123", "aa", "Andrej", "Acevski"));
+    }
+}
