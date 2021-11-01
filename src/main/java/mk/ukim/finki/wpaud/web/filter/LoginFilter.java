@@ -26,8 +26,8 @@ public class LoginFilter implements Filter {
 
         // morame da ja napravime ovaa proverka
         // inace ke zaglavime vo endless loop
-        if (!"/servlet/login".equals(path) && !"/css/style.css".equals(path) && user == null) {
-            response.sendRedirect("/servlet/login");
+        if (!"/login".equals(path) && !"/register".equals(path) && !"/css/style.css".equals(path) && user == null) {
+            response.sendRedirect("/login");
         } else {
             filterChain.doFilter(servletRequest, servletResponse);
         }
