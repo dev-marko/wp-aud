@@ -1,9 +1,6 @@
 package mk.ukim.finki.wpaud.bootstrap;
 
-import mk.ukim.finki.wpaud.model.Category;
-import mk.ukim.finki.wpaud.model.Manufacturer;
-import mk.ukim.finki.wpaud.model.Product;
-import mk.ukim.finki.wpaud.model.User;
+import mk.ukim.finki.wpaud.model.*;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -20,6 +17,7 @@ public class DataHolder {
     public static List<User> userList = new ArrayList<>();
     public static List<Manufacturer> manufacturerList = new ArrayList<>();
     public static List<Product> productList = new ArrayList<>();
+    public static List<ShoppingCart> shoppingCarts = new ArrayList<>();
 
     // Shtom ke se instancira klasava, ke se povika metodov
     // za da se popolnat nekoi parametri (kako da povikuva konstruktor)
