@@ -82,7 +82,8 @@ public class ProductController {
                               @RequestParam Double price,
                               @RequestParam Integer quantity,
                               @RequestParam Long category,
-                              @RequestParam Long manufacturer) {
+                              @RequestParam Long manufacturer)
+    {
 
         // ovoj save metod ke pravi problemi ako probame da go editirame imeto na
         // veke postoecki produkt bidejki momentalno nemame ID kaj produktite
