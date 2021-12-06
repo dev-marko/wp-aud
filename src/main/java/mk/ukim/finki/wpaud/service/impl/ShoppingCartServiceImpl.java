@@ -8,10 +8,12 @@ import mk.ukim.finki.wpaud.model.exceptions.ProductAlreadyInShoppingCartExceptio
 import mk.ukim.finki.wpaud.model.exceptions.ProductNotFoundException;
 import mk.ukim.finki.wpaud.model.exceptions.ShoppingCartNotFoundException;
 import mk.ukim.finki.wpaud.model.exceptions.UserNotFoundException;
-import mk.ukim.finki.wpaud.repository.InMemoryShoppingCartRepository;
-import mk.ukim.finki.wpaud.repository.InMemoryUserRepository;
+import mk.ukim.finki.wpaud.repository.impl.InMemoryUserRepository;
+import mk.ukim.finki.wpaud.repository.jpa.ShoppingCartRepository;
+import mk.ukim.finki.wpaud.repository.jpa.UserRepository;
 import mk.ukim.finki.wpaud.service.ProductService;
 import mk.ukim.finki.wpaud.service.ShoppingCartService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,32 +21,40 @@ import java.util.List;
 @Service
 public class ShoppingCartServiceImpl implements ShoppingCartService {
 
-    private final InMemoryShoppingCartRepository inMemoryShoppingCartRepository;
-    private final InMemoryUserRepository inMemoryUserRepository;
+    private final ShoppingCartRepository shoppingCartRepository;
+    private final UserRepository userRepository;
     private final ProductService productService;
 
-    public ShoppingCartServiceImpl(InMemoryShoppingCartRepository inMemoryShoppingCartRepository, InMemoryUserRepository inMemoryUserRepository, ProductService productService) {
-        this.inMemoryShoppingCartRepository = inMemoryShoppingCartRepository;
-        this.inMemoryUserRepository = inMemoryUserRepository;
+    @Autowired
+    public ShoppingCartServiceImpl(ShoppingCartRepository shoppingCartRepository, UserRepository userRepository, ProductService productService) {
+        this.shoppingCartRepository = shoppingCartRepository;
+        this.userRepository = userRepository;
         this.productService = productService;
     }
 
     @Override
     public List<Product> listAllProductsInCart(Long cartId) {
-        if (this.inMemoryShoppingCartRepository.findById(cartId).isEmpty()) {
+        if (this.shoppingCartRepository.findById(cartId).isEmpty()) {
             throw new ShoppingCartNotFoundException(cartId);
         }
 
-        return this.inMemoryShoppingCartRepository.findById(cartId).get().getProducts();
+        return this.shoppingCartRepository.findById(cartId).get().getProducts();
     }
 
     @Override
     public ShoppingCart getActiveCart(String username) {
-        return this.inMemoryShoppingCartRepository.findByUsernameAndStatus(username, ShoppingCartStatus.CREATED).orElseGet(() -> {
-            User user = this.inMemoryUserRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException(username));
-            ShoppingCart shoppingCart = new ShoppingCart(user);
-            return this.inMemoryShoppingCartRepository.save(shoppingCart);
-        });
+
+        User user = this.userRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException(username));
+
+        return this.shoppingCartRepository
+                .findByUserAndStatus(user, ShoppingCartStatus.CREATED)
+                .orElseGet(() -> {
+                    ShoppingCart sc = new ShoppingCart(user);
+                    return this.shoppingCartRepository.save(sc);
+                });
+
     }
 
     @Override
@@ -52,12 +62,12 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         ShoppingCart shoppingCart = this.getActiveCart(username);
         Product product = this.productService.findById(productId).orElseThrow(() -> new ProductNotFoundException(productId));
 
-        if (shoppingCart.getProducts().stream().anyMatch(i -> i.getId().equals(productId))){
+        if (shoppingCart.getProducts().stream().anyMatch(i -> i.getId().equals(productId))) {
             throw new ProductAlreadyInShoppingCartException(productId, username);
         }
 
         shoppingCart.getProducts().add(product);
 
-        return this.inMemoryShoppingCartRepository.save(shoppingCart);
+        return this.shoppingCartRepository.save(shoppingCart);
     }
 }

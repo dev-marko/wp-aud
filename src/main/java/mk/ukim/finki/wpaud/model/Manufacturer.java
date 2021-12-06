@@ -1,13 +1,17 @@
 package mk.ukim.finki.wpaud.model;
 
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 
 
-@Data
 @Entity
 @NoArgsConstructor
+@Getter
+@Setter
 @Table(name="manufacturers")
 public class Manufacturer {
     @Id
@@ -18,7 +22,6 @@ public class Manufacturer {
     private String address;
 
     public Manufacturer(String name, String address) {
-        //this.id = (long) (Math.random() * 1000);
         this.name = name;
         this.address = address;
     }
