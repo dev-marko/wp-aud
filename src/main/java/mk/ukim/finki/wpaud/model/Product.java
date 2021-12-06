@@ -6,14 +6,14 @@ import javax.persistence.*;
 import java.util.List;
 
 
-@NoArgsConstructor
+
 @Getter
 @Setter
 @Entity
 public class Product {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
@@ -26,6 +26,7 @@ public class Product {
     @ManyToOne
     private Manufacturer manufacturer;
 
+    public Product() {}
 
 
     public Product(String name, Double price, Integer quantity, Category category, Manufacturer manufacturer) {
