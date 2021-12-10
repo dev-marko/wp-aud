@@ -7,6 +7,7 @@ import mk.ukim.finki.wpaud.service.CategoryService;
 import mk.ukim.finki.wpaud.service.ManufacturerService;
 import mk.ukim.finki.wpaud.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -53,6 +54,7 @@ public class ProductController {
     }
 
     @GetMapping("/add-form")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String addProductPage(Model model) {
         // ni treba modelot za da gi izlistame proizvoditelite i kategoriite
         List<Category> categoryList = this.categoryService.listCategories();

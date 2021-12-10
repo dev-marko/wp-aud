@@ -31,13 +31,18 @@
                                     Toa pole ni e potrebno, no vo momentalnata verzija na Spring e onevozmozeno poradi
                                     nekoja pricina, zatoa nie manuelno ke go postavime na true vo app.props
                                  -->
-                                <form th:action="@{'/products/delete/{id}' (id=${product.getId()})}" th:method="DELETE">
-                                    <button type="submit" class="btn btn-sm btn-danger"><i
-                                            class="fa fa-trash">Delete</i></button>
-                                </form>
+                                <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+                                    <form th:action="@{'/products/delete/{id}' (id=${product.getId()})}"
+                                          th:method="DELETE">
+                                        <button type="submit" class="btn btn-sm btn-danger"><i
+                                                class="fa fa-trash">Delete</i></button>
+                                    </form>
+                                </th:block>
 
-                                <a th:href="@{'/products/edit-form/{id}' (id=${product.getId()})}"
-                                   class="btn btn-sm btn-info"><i class="fa fa-trash">Edit</i></a>
+                                <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+                                    <a th:href="@{'/products/edit-form/{id}' (id=${product.getId()})}"
+                                       class="btn btn-sm btn-info"><i class="fa fa-trash">Edit</i></a>
+                                </th:block>
 
                                 <form th:action="@{'/shopping-cart/add-product/{id}' (id=${product.getId()})}"
                                       th:method="POST">
