@@ -38,7 +38,8 @@ public class ProductController {
 
         List<Product> productList = this.productService.findAll();
         model.addAttribute("products", productList);
-        return "products";
+        model.addAttribute("bodyContent", "products");
+        return "master-template";
     }
 
     // /products/67   -- ova 67 e path variable
@@ -58,7 +59,8 @@ public class ProductController {
         List<Manufacturer> manufacturerList = this.manufacturerService.findAll();
         model.addAttribute("categories", categoryList);
         model.addAttribute("manufacturers", manufacturerList);
-        return "add-product";
+        model.addAttribute("bodyContent", "add-product");
+        return "master-template";
     }
 
     @GetMapping("/edit-form/{id}")
@@ -70,7 +72,8 @@ public class ProductController {
             model.addAttribute("categories", categoryList);
             model.addAttribute("manufacturers", manufacturerList);
             model.addAttribute("product", product);
-            return "add-product";
+            model.addAttribute("bodyContent", "add-product");
+            return "master-template";
         }
 
         return "redirect:/products?error=ProductNotFound";

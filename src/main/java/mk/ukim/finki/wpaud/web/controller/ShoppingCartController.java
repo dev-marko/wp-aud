@@ -29,7 +29,8 @@ public class ShoppingCartController {
         User user = (User) req.getSession().getAttribute("user");
         ShoppingCart shoppingCart = this.shoppingCartService.getActiveCart(user.getUsername());
         model.addAttribute("products", this.shoppingCartService.listAllProductsInCart(shoppingCart.getId()));
-        return "shopping-cart";
+        model.addAttribute("bodyContent", "shopping-cart");
+        return "master-template";
     }
 
     @PostMapping("/add-product/{id}")
