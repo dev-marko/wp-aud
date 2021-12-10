@@ -1,8 +1,10 @@
 package mk.ukim.finki.wpaud.web.controller;
 
+import mk.ukim.finki.wpaud.model.Role;
 import mk.ukim.finki.wpaud.model.exceptions.InvalidArgumentsException;
 import mk.ukim.finki.wpaud.model.exceptions.PasswordsDoNotMatchException;
 import mk.ukim.finki.wpaud.service.AuthService;
+import mk.ukim.finki.wpaud.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,10 +18,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class RegisterController {
 
     private final AuthService authService;
+    private final UserService userService;
 
     @Autowired
-    public RegisterController(AuthService authService) {
+    public RegisterController(AuthService authService, UserService userService) {
         this.authService = authService;
+        this.userService = userService;
     }
 
     @GetMapping
@@ -38,12 +42,13 @@ public class RegisterController {
                            @RequestParam String password,
                            @RequestParam String repeatedPassword,
                            @RequestParam String name,
-                           @RequestParam String surname) {
+                           @RequestParam String surname,
+                           @RequestParam Role role) {
         // RequestParam za da gi primime kako parametri od formata
         // da ne pishuvame request.getParameter...
         // NAPOMENA: iminjata na parametrite vo metodot mora da se ISTI so name atributite vo formata
         try {
-            this.authService.register(username, password, repeatedPassword, name, surname);
+            this.userService.register(username, password, repeatedPassword, name, surname, role);
             return "redirect:/login";
         } catch (PasswordsDoNotMatchException | InvalidArgumentsException e) {
             return "redirect:/register?error=" + e.getMessage();
