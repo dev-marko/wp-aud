@@ -83,17 +83,20 @@ public class ProductController {
 
     // Ako ti se pojavi error 400 Bad Request proveri dali name atributite ti se sovpagjaat
     @PostMapping("/add")
-    public String saveProduct(@RequestParam String name,
-                              @RequestParam Double price,
-                              @RequestParam Integer quantity,
-                              @RequestParam Long category,
-                              @RequestParam Long manufacturer)
-    {
+    public String saveProduct(
+            @RequestParam(required = false) Long id,
+            @RequestParam String name,
+            @RequestParam Double price,
+            @RequestParam Integer quantity,
+            @RequestParam Long category,
+            @RequestParam Long manufacturer) {
 
-        // ovoj save metod ke pravi problemi ako probame da go editirame imeto na
-        // veke postoecki produkt bidejki momentalno nemame ID kaj produktite
-        // i prebaruvanjeto kaj removeIf se vrsi po ime...
-        this.productService.save(name, price, quantity, category, manufacturer);
+        if (id != null) {
+            this.productService.edit(id, name, price, quantity, category, manufacturer);
+        } else {
+            this.productService.save(name, price, quantity, category, manufacturer);
+        }
+
         return "redirect:/products";
     }
 
