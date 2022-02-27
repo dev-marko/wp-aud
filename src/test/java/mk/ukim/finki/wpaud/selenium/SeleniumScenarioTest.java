@@ -2,7 +2,7 @@ package mk.ukim.finki.wpaud.selenium;
 
 import mk.ukim.finki.wpaud.model.Category;
 import mk.ukim.finki.wpaud.model.Manufacturer;
-import mk.ukim.finki.wpaud.model.Role;
+import mk.ukim.finki.wpaud.model.enumerations.Role;
 import mk.ukim.finki.wpaud.model.User;
 import mk.ukim.finki.wpaud.service.CategoryService;
 import mk.ukim.finki.wpaud.service.ManufacturerService;

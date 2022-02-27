@@ -1,6 +1,6 @@
 package mk.ukim.finki.wpaud.service.impl;
 
-import mk.ukim.finki.wpaud.model.Role;
+import mk.ukim.finki.wpaud.model.enumerations.Role;
 import mk.ukim.finki.wpaud.model.User;
 import mk.ukim.finki.wpaud.model.exceptions.InvalidUserCredentialsException;
 import mk.ukim.finki.wpaud.model.exceptions.PasswordsDoNotMatchException;

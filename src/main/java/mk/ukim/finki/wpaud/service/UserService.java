@@ -1,6 +1,6 @@
 package mk.ukim.finki.wpaud.service;
 
-import mk.ukim.finki.wpaud.model.Role;
+import mk.ukim.finki.wpaud.model.enumerations.Role;
 import mk.ukim.finki.wpaud.model.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 

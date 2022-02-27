@@ -1,6 +1,6 @@
 package mk.ukim.finki.wpaud.web.controller;
 
-import mk.ukim.finki.wpaud.model.Role;
+import mk.ukim.finki.wpaud.model.enumerations.Role;
 import mk.ukim.finki.wpaud.model.exceptions.InvalidArgumentsException;
 import mk.ukim.finki.wpaud.model.exceptions.PasswordsDoNotMatchException;
 import mk.ukim.finki.wpaud.service.AuthService;
