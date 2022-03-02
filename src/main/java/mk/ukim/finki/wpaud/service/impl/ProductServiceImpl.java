@@ -3,17 +3,16 @@ package mk.ukim.finki.wpaud.service.impl;
 import mk.ukim.finki.wpaud.model.Category;
 import mk.ukim.finki.wpaud.model.Manufacturer;
 import mk.ukim.finki.wpaud.model.Product;
+import mk.ukim.finki.wpaud.model.events.ProductCreatedEvent;
 import mk.ukim.finki.wpaud.model.exceptions.CategoryNotFoundException;
 import mk.ukim.finki.wpaud.model.exceptions.ManufacturerNotFoundException;
 import mk.ukim.finki.wpaud.model.exceptions.ProductNotFoundException;
-import mk.ukim.finki.wpaud.repository.impl.InMemoryCategoryRepository;
-import mk.ukim.finki.wpaud.repository.impl.InMemoryManufacturerRepository;
-import mk.ukim.finki.wpaud.repository.impl.InMemoryProductRepository;
 import mk.ukim.finki.wpaud.repository.jpa.CategoryRepository;
 import mk.ukim.finki.wpaud.repository.jpa.ManufacturerRepository;
 import mk.ukim.finki.wpaud.repository.jpa.ProductRepository;
+import mk.ukim.finki.wpaud.repository.jpa.views.ProductsPerManufacturerViewRepository;
 import mk.ukim.finki.wpaud.service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -26,11 +25,15 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final ManufacturerRepository manufacturerRepository;
+    private final ProductsPerManufacturerViewRepository productsPerManufacturerViewRepository;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
-    public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository, ManufacturerRepository manufacturerRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository, ManufacturerRepository manufacturerRepository, ProductsPerManufacturerViewRepository productsPerManufacturerViewRepository, ApplicationEventPublisher applicationEventPublisher) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
         this.manufacturerRepository = manufacturerRepository;
+        this.productsPerManufacturerViewRepository = productsPerManufacturerViewRepository;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     @Override
@@ -56,7 +59,13 @@ public class ProductServiceImpl implements ProductService {
 
         this.productRepository.deleteByName(name);
 
-        return Optional.of(this.productRepository.save(new Product(name, price, quantity, category, manufacturer)));
+        Product p = new Product(name, price, quantity, category, manufacturer);
+        this.productRepository.save(p);
+        //this.refreshMaterializedView();
+        this.applicationEventPublisher.publishEvent(new ProductCreatedEvent(p));
+
+
+        return Optional.of(p);
     }
 
     @Override
@@ -72,11 +81,19 @@ public class ProductServiceImpl implements ProductService {
         product.setCategory(category);
         product.setManufacturer(manufacturer);
 
-        return Optional.of(this.productRepository.save(product));
+        this.productRepository.save(product);
+        //this.refreshMaterializedView();
+
+        return Optional.of(product);
     }
 
     @Override
     public void deleteById(Long id) {
         this.productRepository.deleteById(id);
+    }
+
+    @Override
+    public void refreshMaterializedView() {
+        this.productsPerManufacturerViewRepository.refreshMaterializedView();
     }
 }

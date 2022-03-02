@@ -34,6 +34,9 @@ public class User implements UserDetails {
     @ManyToOne
     private Discount discount;
 
+    @Version
+    private Long version;
+
     private boolean isAccountNonExpired = true;
     private boolean isAccountNonLocked = true;
     private boolean isCredentialsNonExpired = true;
