@@ -27,7 +27,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // da ne se ovozmozuvaat povici kon aplikacijata od 3rd party apps
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/", "/home","/assets/**", "/register").permitAll()
+                .antMatchers("/", "/home","/assets/**", "/register", "/api/**").permitAll()
                 .antMatchers("/admin/**")
                 .hasRole("ADMIN")
                 .anyRequest().authenticated()
