@@ -4,8 +4,11 @@ const manufacturers = (props) => {
 
     return (
       <div className={"container mm-4 mt-5"}>
+          {
+              !props.manufacturers.length && (<div>loading...</div>)
+          }
           <div className={"row"}>
-              <div className={"row"}>
+              <div className={"table-responsive"}>
                   <table className={"table table-striped"}>
                       <thead>
                         <tr>
